@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>el color azul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400;1,9..144,700&display=swap" rel="stylesheet">
+
+<!-- =====================================================
+     CSS
+     ===================================================== -->
+<style>
+:root{
+  --cielo:#8BDCFF;          /* color principal */
+  --cielo-hondo:#2F9FD6;
+  --tinta:#10324A;
+  --tinta-suave:#4C6E84;
+  --fondo:#EEF9FF;
+  --papel:#FFFFFF;
+  --corazon:#FF6B8B;
+  --sombra:rgba(16,50,74,.22);
+  --serif:"Fraunces", Georgia, "Times New Roman", serif;
+  --mano:"DM Mono", "Courier New", monospace;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --tinta:#E6F7FF; --tinta-suave:#9EC4D9; --fondo:#081C2C;
+    --papel:#11304A; --cielo-hondo:#8BDCFF; --sombra:rgba(0,0,0,.55);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --tinta:#E6F7FF; --tinta-suave:#9EC4D9; --fondo:#081C2C;
+  --papel:#11304A; --cielo-hondo:#8BDCFF; --sombra:rgba(0,0,0,.55);
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0; background:var(--fondo); color:var(--tinta);
+  font-family:var(--serif); font-size:1.125rem; line-height:1.7;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+:focus-visible{outline:3px solid var(--cielo-hondo); outline-offset:4px; border-radius:6px}
+
+/* barra de progreso */
+.progreso{position:fixed; top:0; left:0; right:0; z-index:30; padding-top:env(safe-area-inset-top,0px); pointer-events:none}
+.progreso span{display:block; height:4px; width:0; background:var(--cielo-hondo); border-radius:0 4px 4px 0}
+
+/* ---------- portada ---------- */
+.portada{
+  position:relative; min-height:100vh; min-height:100svh; overflow:hidden;
+  display:grid; place-items:center; text-align:center; padding:3rem 1.25rem;
+  background:var(--cielo); color:#10324A;
+}
+.portada .contenido{position:relative; z-index:2}
+.portada .nota{font-family:var(--mano); font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 .5rem; transform:rotate(-3deg)}
+.portada h1{
+  font-weight:300; font-style:italic; margin:0; line-height:.88;
+  font-size:clamp(4.2rem,17vw,12rem); letter-spacing:-.04em;
+}
+.portada h1 span{display:block; font-style:normal; font-weight:600}
+.portada .nombres{font-family:var(--mano); font-size:clamp(1.8rem,5vw,2.6rem); margin:1.2rem 0 0}
+.portada .pista{
+  position:absolute; left:50%; bottom:calc(1.5rem + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
+  font-family:var(--mano); font-size:1.5rem; z-index:2; animation:rebote 2s ease-in-out infinite;
+}
+@keyframes rebote{50%{transform:translate(-50%,8px)}}
+.flotante{position:absolute; bottom:-10%; z-index:1; color:#fff; pointer-events:none; animation:subir linear infinite}
+@keyframes subir{to{transform:translateY(-125vh) rotate(30deg)}}
+
+/* ---------- historia ---------- */
+.historia{position:relative; max-width:1080px; margin:0 auto; padding:7rem 1.25rem 4rem}
+.hilo{position:absolute; top:7rem; bottom:4rem; left:50%; width:2px; transform:translateX(-50%);
+  background:repeating-linear-gradient(var(--cielo) 0 10px, transparent 10px 18px)}
+.hilo-lleno{width:100%; height:0; background:var(--cielo-hondo)}
+
+.momento{position:relative; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; min-height:82vh}
+.momento:nth-child(even) .medio{order:2}
+.momento:nth-child(even) .texto{justify-self:end; text-align:right}
+.punto{
+  position:absolute; left:50%; top:50%; width:30px; height:30px; display:grid; place-items:center;
+  transform:translate(-50%,-50%) scale(0); border-radius:50%; background:var(--fondo);
+  border:2px solid var(--cielo-hondo); color:var(--corazon); font-size:14px;
+  transition:transform .6s cubic-bezier(.34,1.56,.64,1) .2s;
+}
+.momento.visible .punto{transform:translate(-50%,-50%) scale(1)}
+.medio{display:flex; justify-content:center; perspective:1400px}
+
+/* polaroid */
+.polaroid{
+  --giro:-3deg; position:relative; margin:0; width:min(340px,78vw);
+  background:#fff; padding:14px 14px 62px; border-radius:3px;
+  box-shadow:0 24px 46px var(--sombra), 0 2px 6px var(--sombra);
+}
+.polaroid img{display:block; width:100%; aspect-ratio:4/5; object-fit:cover; background:#dff4ff}
+.polaroid figcaption{position:absolute; left:10px; right:10px; bottom:14px; text-align:center;
+  font-family:var(--mano); font-size:1.65rem; line-height:1.1; color:#1B3A50}
+.cinta{position:absolute; top:-15px; left:50%; width:112px; height:30px; transform:translateX(-50%) rotate(-4deg);
+  background:rgba(139,220,255,.75); box-shadow:0 2px 4px rgba(0,0,0,.08); z-index:2}
+
+/* animación 1: cae girando */
+.cae .polaroid{opacity:0; transform:translateY(-160px) rotate(-30deg) scale(.8);
+  transition:transform 1.2s cubic-bezier(.34,1.45,.64,1), opacity .5s}
+.visible.cae .polaroid{opacity:1; transform:rotate(var(--giro))}
+
+/* animación 2: se voltea como carta */
+.voltea .carta{--giro:3deg; width:min(340px,78vw); opacity:0; transform:translateY(50px);
+  transition:opacity .6s, transform .8s cubic-bezier(.22,1,.36,1)}
+.voltea .carta-interior{position:relative; transform-style:preserve-3d; transform:rotateY(180deg);
+  transition:transform 1.4s cubic-bezier(.65,0,.35,1) .7s}
+.voltea .polaroid{width:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden}
+.voltea .reverso{
+  position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  transform:rotateY(180deg); border-radius:3px; display:grid; place-items:center; text-align:center;
+  background:radial-gradient(circle at 50% 45%, #fff 0 18%, transparent 19%),
+             repeating-linear-gradient(45deg, #8BDCFF 0 14px, #A7E5FF 14px 28px);
+  box-shadow:0 24px 46px var(--sombra);
+}
+.voltea .reverso b{color:var(--corazon); font-size:3rem; line-height:1; margin-top:-.4rem}
+.visible.voltea .carta{opacity:1; transform:rotate(var(--giro))}
+.visible.voltea .carta-interior{transform:rotateY(0)}
+
+/* animación 3 (sorpresa): se revela como foto instantánea */
+.revela .polaroid{--giro:-1.5deg; opacity:0; transform:translateY(70px) rotate(4deg) scale(.92);
+  transition:transform 1s cubic-bezier(.22,1,.36,1), opacity .6s}
+.revela .polaroid img{filter:brightness(2.4) sepia(.7) saturate(0) blur(12px); transition:filter 3.4s ease .8s}
+.revela figcaption{opacity:0; transition:opacity 1s 3.2s}
+.visible.revela .polaroid{opacity:1; transform:rotate(var(--giro)); animation:sacudir .5s ease .9s 2}
+.visible.revela .polaroid img{filter:none}
+.visible.revela figcaption{opacity:1}
+@keyframes sacudir{25%{translate:-6px 0}75%{translate:6px 0}}
+
+/* texto */
+.texto{max-width:27rem}
+.texto > *{opacity:0; transform:translateY(22px); transition:opacity .8s, transform .8s cubic-bezier(.22,1,.36,1)}
+.visible .texto > *{opacity:1; transform:none}
+.visible .texto > :nth-child(2){transition-delay:.15s}
+.visible .texto > :nth-child(3){transition-delay:.3s}
+.visible .texto > :nth-child(4){transition-delay:.45s}
+.capitulo{font-family:var(--mano); font-size:1.6rem; color:var(--cielo-hondo); margin:0}
+.texto h2{font-size:clamp(2rem,4.2vw,2.9rem); font-weight:600; line-height:1.1; letter-spacing:-.02em; margin:.2rem 0 1rem}
+.texto p{margin:0; color:var(--tinta-suave); line-height:1.8}
+.texto .pd{font-family:var(--mano); font-size:1.5rem; color:var(--corazon); margin-top:1rem; line-height:1.2}
+
+/* ---------- contador ---------- */
+.contador{text-align:center; padding:6rem 1.25rem; background:var(--cielo); color:#10324A}
+.contador p{font-family:var(--mano); font-size:1.8rem; margin:0}
+.cifras{display:flex; justify-content:center; flex-wrap:wrap; gap:1rem 4rem; margin:1.2rem 0}
+.cifras div{display:flex; flex-direction:column}
+.cifras strong{font-size:clamp(3rem,9vw,5.5rem); font-weight:300; font-style:italic; line-height:1; font-variant-numeric:tabular-nums}
+.cifras span{font-size:1.1rem}
+
+/* ---------- final ---------- */
+.final{position:relative; min-height:100vh; min-height:100svh; display:grid; place-items:center; padding:4rem 1.25rem; overflow:hidden}
+.tarjeta{position:relative; max-width:36rem; text-align:center}
+.tarjeta .capitulo{font-size:1.8rem}
+.tarjeta h2{font-size:clamp(2.2rem,6vw,3.6rem); font-weight:300; font-style:italic; line-height:1.1; letter-spacing:-.02em; margin:.4rem 0 2.2rem}
+.respuestas{display:flex; justify-content:center; align-items:center; gap:1.2rem; min-height:5rem}
+.boton{font:600 1.15rem var(--serif); padding:.85rem 2.2rem; border-radius:999px; cursor:pointer; border:0}
+.si{background:var(--cielo); color:#10324A; box-shadow:0 12px 28px rgba(47,159,214,.35); transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.no{background:transparent; color:var(--tinta); border:2px solid var(--tinta-suave); white-space:nowrap}
+.no.suelto{position:absolute; z-index:5; transition:left .35s ease, top .35s ease}
+.mensaje-no{font-family:var(--mano); font-size:1.6rem; color:var(--corazon); min-height:2.2rem; margin:1rem 0 0}
+.despues h3{font-size:clamp(2rem,5vw,3rem); font-weight:600; margin:0 0 .6rem; letter-spacing:-.02em}
+.despues p{color:var(--tinta-suave); margin:0 0 2rem}
+.despues:not([hidden]){animation:aparecer .9s cubic-bezier(.22,1,.36,1)}
+@keyframes aparecer{from{opacity:0; transform:translateY(20px)}}
+.carta-link{display:inline-block; text-decoration:none; background:var(--tinta); color:var(--fondo)}
+.chispa{position:fixed; z-index:40; pointer-events:none; color:var(--corazon); line-height:1}
+
+footer{text-align:center; padding:2rem 1rem 3rem; font-family:var(--mano); font-size:1.4rem; color:var(--tinta-suave)}
+
+/* ---------- celular ---------- */
+@media (max-width:760px){
+  .historia{padding-top:5rem}
+  .hilo{left:1.1rem; top:5rem}
+  .momento{grid-template-columns:1fr; gap:2rem; min-height:auto; padding:0 0 6rem 2.6rem}
+  .momento:nth-child(even) .medio{order:0}
+  .momento:nth-child(even) .texto{justify-self:start; text-align:left}
+  .punto{left:1.1rem; top:0}
+  .medio{justify-content:flex-start}
+  .polaroid,.voltea .carta{width:min(320px,100%)}
+  .respuestas{flex-direction:column}
+}
+
+/* menos movimiento */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important; transition:none !important}
+  .momento .polaroid,.momento .carta,.texto > *,.revela figcaption{opacity:1 !important; transform:none !important}
+  .revela .polaroid img{filter:none !important}
+  .voltea .carta-interior{transform:none !important}
+  .punto{transform:translate(-50%,-50%) scale(1) !important}
+  .flotante{display:none}
+}
+
+/* tamaños para la fuente mono */
+.portada .nota{font-size:clamp(1rem,2.4vw,1.25rem); transform:none}
+.portada .nombres{font-size:clamp(1.05rem,3vw,1.4rem); letter-spacing:.02em}
+.portada .pista{font-size:.95rem}
+.polaroid figcaption{font-size:.95rem; bottom:22px}
+.capitulo{font-size:.95rem}
+.tarjeta .capitulo{font-size:1rem}
+.texto .pd{font-size:.95rem}
+.contador p{font-size:1.1rem}
+.mensaje-no{font-size:1rem}
+footer{font-size:.9rem}
+
+/* galaxia del contador */
+.contador{
+  position:relative; overflow:hidden; isolation:isolate;
+  min-height:80vh; display:flex; flex-direction:column; justify-content:center;
+  color:#EAF8FF;
+  background:
+    radial-gradient(ellipse at 18% 25%, rgba(139,220,255,.20), transparent 50%),
+    radial-gradient(ellipse at 82% 75%, rgba(255,107,139,.14), transparent 50%),
+    radial-gradient(ellipse at center, #0D1F44 0%, #050B1A 75%);
+}
+#galaxia{position:absolute; inset:0; width:100%; height:100%; z-index:-1; display:block}
+.contador p{color:#8BDCFF}
+.contador .cifras strong{text-shadow:0 0 28px rgba(139,220,255,.75)}
+
+
+
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     HTML
+     ===================================================== -->
+<div class="progreso" aria-hidden="true"><span id="barra"></span></div>
+
+<header class="portada" id="portada">
+  <div class="contenido">
+    <p class="nota">solo un color?</p>
+    <h1>El color <span>azul</span></h1>
+    <p class="nombres" id="nombres"></p>
+  </div>
+  <div class="pista">desliza slowly ↓</div>
+</header>
+
+<main>
+  <section class="historia" aria-label="Nuestra historia">
+    <div class="hilo" aria-hidden="true"><div class="hilo-lleno" id="hiloLleno"></div></div>
+    <div id="momentos"></div>
+  </section>
+
+  <section class="contador" id="contador">
+    <canvas id="galaxia" aria-hidden="true"></canvas>
+    <p>hasta hoy llevamos</p>
+    <div class="cifras">
+      <div><strong id="dias">0</strong><span>días</span></div>
+      <div><strong id="horas">0</strong><span>horas</span></div>
+      <div><strong>20</strong><span>meses</span></div>
+    </div>
+    <p>y ojala duremos mas de lo que dura una galaxia viva</p>
+  </section>
+
+  <section class="final" id="final">
+    <div class="tarjeta">
+      <p class="capitulo">una última pregunta</p>
+      <h2>Te gustaria seguir escribiendo esta historia?</h2>
+
+      <div class="respuestas" id="respuestas">
+        <button class="boton si" id="si">Sí, para siempre ♥</button>
+        <button class="boton no" id="no">No</button>
+      </div>
+      <p class="mensaje-no" id="mensajeNo" aria-live="polite"></p>
+
+      <div class="despues" id="despues" hidden>
+        <h3>i knew it 🙂‍↕️.</h3>
+        <a class="boton carta-link" id="enlaceCarta" target="_blank" rel="noopener">"Open 🩵"</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>hecho con amor, en color azul</footer>
+
+<!-- =====================================================
+     JS
+     ===================================================== -->
+<script>
+/* ===== Todo lo que se personaliza está aquí ===== */
+const CONFIG = {
+  nombres: "Jared & Salva",
+  fechaInicio: "2025-02-23",               // AAAA-MM-DD
+  enlaceDrive: "https://drive.google.com/file/d/17vqhtLIVrIO0-WxtBhbk0nfbvAaqHlpa/view?usp=sharing", // link del documento
+  momentos: [
+    { img:"https://drive.google.com/file/d/1v-XMLnvwa7Gaizx3aHVOkZqnhL_XYErD/view?usp=sharing", pie:"👄",
+      titulo:"todo empezó",
+      texto:"despues de tanto tiempo preparandonos y esperando al otro, porfin nos encontramos." },
+    { img:"https://drive.google.com/file/d/1DP68GS28OXXvsSvGFeZbZ2BXPpp2Z4Rl/view?usp=sharing", pie:"si d'rio hablara",
+      titulo:"nuesto primer avistamiento",
+      texto:"el momento en el que supe que eras real y no solo una ilusion de mi cabeza.",
+      pd:"pd: todavía me emociono como el primer dia" },
+    { img:"https://drive.google.com/file/d/1GLnEwVyPYPPLlwFkcDKWva8hsO33mOBk/view?usp=sharing", pie:"the devil is in the details",
+      titulo:"las cosas pequeñas (y las no tanto)",
+      texto:"los mensajes de buenos días, las canciones que me recuerdan a nosotros y como olvidar el LIBRO." },
+    { img:"https://drive.google.com/file/d/1I5O-SvWHeQeyT1b4EMHQCRiMRRoAfXuO/view?usp=sharing", pie:"you can always paint the roses red",
+      titulo:"nuestra primera aventura",
+      texto:"siempre te voy a agradecer por llevarme a las nubes (en esa ocasion y siempre).",
+      pd:"ya se viene la siguiente 🇲🇽" },
+    { img:"https://drive.google.com/file/d/15kL5hh-bU-GfhZo3lGMWoxAC1utj0aLL/view?usp=sharing",ajuste:"scaleY(-1)", pie:"el 23 como siempre persiguiendonos",
+      titulo:"mi mejor decision",
+      texto:"el segundo si que lo cambio todo." },
+    { img:"https://drive.google.com/file/d/11rcZY1SVmF1B23OfCqo91oSkAR3-EMI1/view?usp=drive_link", pie:"20 meses ♡",
+      titulo:"Hoy, meses después",
+      texto:"y sigo elijiendote y elijiendonos todos los dias." }
+  ]
+};
+
+/* forma de aparecer: se van turnando */
+const ANIMACIONES = ["cae", "voltea", "revela"];
+
+/* foto de muestra mientras llegan las reales */
+function fotoMuestra(i){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'>
+    <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0' stop-color='#D6F3FF'/><stop offset='1' stop-color='#8BDCFF'/></linearGradient></defs>
+    <rect width='800' height='1000' fill='url(#g)'/>
+    <text x='400' y='470' font-size='150' text-anchor='middle' fill='#ffffff'>♥</text>
+    <text x='400' y='600' font-family='Georgia' font-style='italic' font-size='60' text-anchor='middle' fill='#10324A' fill-opacity='.55'>foto ${i+1}</text>
+  </svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+/* convierte un link de Google Drive en un link de imagen */
+function fotoDrive(link){
+  const id = (link.match(/\/d\/([\w-]+)/) || link.match(/[?&]id=([\w-]+)/) || [])[1];
+     return id ? `https://lh3.googleusercontent.com/d/${id}=w1600` : link;}
+
+/* construir los momentos */
+const contenedor = document.getElementById("momentos");
+CONFIG.momentos.forEach((m, i) => {
+const anim = m.animacion || ANIMACIONES[i % ANIMACIONES.length];
+const src = m.img ? fotoDrive(m.img) : fotoMuestra(i);
+  const giro = (i % 2 ? 3 : -3) + "deg";
+  const foto = `
+    <figure class="polaroid" style="--giro:${giro}">
+      <span class="cinta" aria-hidden="true"></span>
+<img src="${src}" alt="${m.titulo}" loading="lazy" referrerpolicy="no-referrer" style="transform:${m.ajuste || 'none'}">      <figcaption>${m.pie || ""}</figcaption>
+    </figure>`;
+  const medio = anim === "voltea"
+    ? `<div class="carta" style="--giro:${giro}"><div class="carta-interior">${foto}
+         <div class="reverso" aria-hidden="true"><b>♥</b></div></div></div>`
+    : foto;
+
+  const art = document.createElement("article");
+  art.className = `momento ${anim}`;
+  art.innerHTML = `
+    <span class="punto" aria-hidden="true">♥</span>
+    <div class="medio">${medio}</div>
+    <div class="texto">
+      <p class="capitulo">${m.capitulo || ""}</p>
+      <h2>${m.titulo}</h2>
+      <p>${m.texto}</p>
+      ${m.pd ? `<p class="pd">${m.pd}</p>` : ""}
+    </div>`;
+  contenedor.appendChild(art);
+});
+
+document.getElementById("nombres").textContent = CONFIG.nombres;
+document.getElementById("enlaceCarta").href = CONFIG.enlaceDrive;
+
+/* corazones flotando en la portada */
+const portada = document.getElementById("portada");
+for (let i = 0; i < 18; i++){
+  const c = document.createElement("span");
+  c.className = "flotante";
+  c.textContent = "♥";
+  c.style.left = Math.random() * 100 + "%";
+  c.style.fontSize = 12 + Math.random() * 26 + "px";
+  c.style.opacity = .35 + Math.random() * .5;
+  c.style.animationDuration = 9 + Math.random() * 9 + "s";
+  c.style.animationDelay = -Math.random() * 15 + "s";
+  portada.appendChild(c);
+}
+
+/* aparecer al deslizar */
+const observador = new IntersectionObserver(entradas => {
+  entradas.forEach(e => {
+    if (e.isIntersecting){
+      e.target.classList.add("visible");
+      observador.unobserve(e.target);
+    }
+  });
+}, { threshold: .3 });
+document.querySelectorAll(".momento").forEach(el => observador.observe(el));
+
+/* barra de progreso e hilo */
+const barra = document.getElementById("barra");
+const hiloLleno = document.getElementById("hiloLleno");
+const historia = document.querySelector(".historia");
+function alDeslizar(){
+  const total = document.documentElement.scrollHeight - innerHeight;
+  barra.style.width = (total > 0 ? scrollY / total * 100 : 0) + "%";
+  const r = historia.getBoundingClientRect();
+  const p = Math.min(Math.max((innerHeight * .6 - r.top) / r.height, 0), 1);
+  hiloLleno.style.height = p * 100 + "%";
+}
+addEventListener("scroll", alDeslizar, { passive:true });
+addEventListener("resize", alDeslizar);
+alDeslizar();
+
+/* contador */
+function contar(el, meta){
+  const t0 = performance.now(), dur = 1800;
+  (function paso(t){
+    const k = Math.min((t - t0) / dur, 1), suave = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(meta * suave).toLocaleString("es-CO");
+    if (k < 1) requestAnimationFrame(paso);
+  })(t0);
+}
+const inicio = new Date(CONFIG.fechaInicio + "T00:00:00");
+const ms = Math.max(Date.now() - inicio.getTime(), 0);
+new IntersectionObserver((e, o) => {
+  if (e[0].isIntersecting){
+    contar(document.getElementById("dias"), Math.floor(ms / 864e5));
+    contar(document.getElementById("horas"), Math.floor(ms / 36e5));
+    o.disconnect();
+  }
+}, { threshold: .4 }).observe(document.getElementById("contador"));
+
+/* la pregunta final */
+const final = document.getElementById("final");
+const si = document.getElementById("si");
+const no = document.getElementById("no");
+const mensajeNo = document.getElementById("mensajeNo");
+const frases = ["i dont think so", "really?", "why do you keep trying?",
+                "sugiero cambiar de boton", "???", "NO"];
+let intentos = 0;
+
+function escapar(ev){
+  if (ev) ev.preventDefault();
+  if (!no.classList.contains("suelto")){
+    no.classList.add("suelto");
+    final.appendChild(no);
+  }
+  const maxX = final.clientWidth - no.offsetWidth - 16;
+  const maxY = final.clientHeight - no.offsetHeight - 16;
+  no.style.left = 16 + Math.random() * Math.max(maxX - 16, 0) + "px";
+  no.style.top  = 16 + Math.random() * Math.max(maxY - 16, 0) + "px";
+  mensajeNo.textContent = frases[intentos % frases.length];
+  intentos++;
+  si.style.transform = `scale(${Math.min(1 + intentos * .12, 1.7)})`;
+}
+no.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") escapar(); });
+no.addEventListener("pointerdown", escapar);
+no.addEventListener("click", escapar);
+
+si.addEventListener("click", () => {
+  const r = si.getBoundingClientRect();
+  lluviaDeCorazones(r.left + r.width / 2, r.top + r.height / 2);
+  document.getElementById("respuestas").hidden = true;
+  no.remove();
+  mensajeNo.textContent = "";
+  document.getElementById("despues").hidden = false;
+});
+
+function lluviaDeCorazones(x, y){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (let i = 0; i < 60; i++){
+    const c = document.createElement("span");
+    c.className = "chispa";
+    c.textContent = "♥";
+    c.style.left = x + "px";
+    c.style.top = y + "px";
+    c.style.fontSize = 12 + Math.random() * 22 + "px";
+    if (i % 3 === 0) c.style.color = "#8BDCFF";
+    document.body.appendChild(c);
+    const ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 260;
+    c.animate([
+      { transform:"translate(-50%,-50%) scale(.4)", opacity:1 },
+      { transform:`translate(calc(-50% + ${Math.cos(ang) * dist}px), calc(-50% + ${Math.sin(ang) * dist + 140}px)) rotate(${Math.random() * 360}deg) scale(1)`, opacity:0 }
+    ], { duration: 1400 + Math.random() * 900, easing:"cubic-bezier(.22,1,.36,1)" }).onfinish = () => c.remove();
+  }
+}
+
+/* ===== galaxia del contador ===== */
+(function(){
+  const canvas = document.getElementById("galaxia");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const inclinacion = -0.35;
+  let w = 0, h = 0, estrellas = [], polvo = [], fugaz = null, animando = false;
+
+  function preparar(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth; h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    estrellas = Array.from({ length: Math.round(w * h / 2200) }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      r: Math.random() * 1.2 + .2, fase: Math.random() * 6.28, vel: .4 + Math.random() * 1.4
+    }));
+
+    const radio = Math.min(w * .46, h * 1.1);
+    polvo = Array.from({ length: 10000 }, () => {
+      const d = Math.pow(Math.random(), 1.7) * radio;
+      const brazo = Math.floor(Math.random() * 3);
+      return {
+        d, r: Math.random() * 1.3 + .3,
+        ang: brazo * 2.094 + (d / radio) * 4.5 + (Math.random() - .5) * .6,
+        color: d < radio * .15 ? "255,244,220" : (Math.random() < .02 ? "255,150,180" : "139,220,255")
+      };
+    });
+  }
+
+  function dibujar(t){
+    ctx.clearRect(0, 0, w, h);
+
+    // estrellas que titilan
+    for (const e of estrellas){
+      const a = .25 + .75 * Math.abs(Math.sin(t * .001 * e.vel + e.fase));
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.r, 0, 6.28); ctx.fill();
+    }
+
+    // núcleo brillante
+    const cx = w / 2, cy = h / 2, rn = Math.min(w, h) * .35;
+    const nucleo = ctx.createRadialGradient(cx, cy, 0, cx, cy, rn);
+    nucleo.addColorStop(0, "rgba(255,240,215,.55)");
+    nucleo.addColorStop(.25, "rgba(139,220,255,.22)");
+    nucleo.addColorStop(1, "rgba(139,220,255,0)");
+    ctx.fillStyle = nucleo;
+    ctx.beginPath(); ctx.ellipse(cx, cy, rn, rn * .45, inclinacion, 0, 6.28); ctx.fill();
+
+    // brazos de la espiral
+    ctx.globalCompositeOperation = "lighter";
+    const giro = t * .00004, ct = Math.cos(inclinacion), st = Math.sin(inclinacion);
+    for (const p of polvo){
+      const a = p.ang + giro;
+      const x0 = Math.cos(a) * p.d, y0 = Math.sin(a) * p.d * .42;
+      ctx.fillStyle = `rgba(${p.color},.55)`;
+      ctx.fillRect(cx + x0 * ct - y0 * st, cy + x0 * st + y0 * ct, p.r, p.r);
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    // estrella fugaz de vez en cuando
+    if (!fugaz && Math.random() < .006) fugaz = { x: Math.random() * w, y: Math.random() * h * .4, vida: 0 };
+    if (fugaz){
+      fugaz.vida++;
+      const largo = 90, px = fugaz.x + fugaz.vida * 9, py = fugaz.y + fugaz.vida * 4;
+      const g = ctx.createLinearGradient(px, py, px - largo, py - largo * .44);
+      g.addColorStop(0, "rgba(255,255,255,.9)");
+      g.addColorStop(1, "rgba(139,220,255,0)");
+      ctx.strokeStyle = g; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - largo, py - largo * .44); ctx.stroke();
+      if (fugaz.vida > 45) fugaz = null;
+    }
+  }
+
+  function bucle(t){
+    if (!animando) return;
+    dibujar(t);
+    requestAnimationFrame(bucle);
+  }
+
+  preparar();
+  dibujar(0);
+  if (!quieto){
+    new IntersectionObserver(e => {
+      const antes = animando;
+      animando = e[0].isIntersecting;
+      if (animando && !antes) requestAnimationFrame(bucle);
+    }).observe(canvas);
+  }
+  addEventListener("resize", () => { preparar(); dibujar(performance.now()); });
+})();
+
+</script>
+</body>
+</html>
